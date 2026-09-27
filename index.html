@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#667eea">
+    <title>Personality Quiz — Discover Yourself</title>
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" type="image/png" href="./favicon.png">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div id="app">
+
+        <!-- Welcome Screen -->
+        <section id="welcome-screen" class="screen active">
+            <div class="container">
+                <div class="welcome-content">
+                    <div class="logo-icon">🧠</div>
+                    <h1>Discover <span class="gradient-text">Yourself</span></h1>
+                    <p class="subtitle">30 questions that will reveal your personality type, ideal career, and hidden talents</p>
+
+                    <div class="features">
+                        <div class="feature">
+                            <span class="feature-icon">🎭</span>
+                            <span>Personality Type (MBTI)</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">💼</span>
+                            <span>Top 10 Careers</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">💪</span>
+                            <span>Your Strengths</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🌟</span>
+                            <span>Famous People</span>
+                        </div>
+                    </div>
+
+                    <button id="start-btn" class="btn btn-primary btn-lg">
+                        Start Quiz
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+
+                    <div id="prev-results" class="prev-results" style="display:none;">
+                        <button id="view-prev-btn" class="btn btn-outline">
+                            📊 View Previous Results
+                        </button>
+                    </div>
+
+                    <p class="disclaimer">⏱ Takes 5-7 minutes. Answer intuitively!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Too Many Skips Warning -->
+        <section id="skip-warning-screen" class="screen">
+            <div class="container">
+                <div class="warning-content">
+                    <div class="warning-icon">⚠️</div>
+                    <h1>Too Many Skips</h1>
+                    <p class="subtitle">You skipped more than half of the questions. For accurate results, please answer at least 16 out of 30 questions.</p>
+                    <p class="skip-stats" id="skip-stats"></p>
+                    <button id="retry-btn" class="btn btn-primary btn-lg">
+                        🔄 Start Over
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Screen -->
+        <section id="quiz-screen" class="screen">
+            <div class="container">
+                <div class="quiz-header">
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div id="progress-fill" class="progress-fill"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span id="question-counter">1 / 30</span>
+                            <span id="progress-percent">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="question-container" class="question-container">
+                    <div class="question-category" id="question-category"></div>
+                    <h2 id="question-text" class="question-text"></h2>
+                    <div id="answers-container" class="answers-container"></div>
+                </div>
+
+                <div class="quiz-nav">
+                    <button id="prev-question-btn" class="btn btn-outline btn-sm" disabled>
+                        ← Back
+                    </button>
+                    <button id="skip-btn" class="btn btn-ghost btn-sm">
+                        Skip →
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading Screen -->
+        <section id="loading-screen" class="screen">
+            <div class="container">
+                <div class="loading-content">
+                    <div class="loader">
+                        <div class="loader-brain">🧠</div>
+                        <div class="loader-ring"></div>
+                    </div>
+                    <h2>Analyzing your answers...</h2>
+                    <p id="loading-status">Determining personality type</p>
+                    <div class="loading-steps">
+                        <div class="loading-step" id="step-1">
+                            <span class="step-icon">🔍</span> Analyzing responses
+                        </div>
+                        <div class="loading-step" id="step-2">
+                            <span class="step-icon">🧬</span> Determining personality type
+                        </div>
+                        <div class="loading-step" id="step-3">
+                            <span class="step-icon">💼</span> Matching careers
+                        </div>
+                        <div class="loading-step" id="step-4">
+                            <span class="step-icon">📊</span> Generating report
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Screen -->
+        <section id="results-screen" class="screen">
+            <div class="container">
+                <div class="results-content">
+                    <div class="result-header">
+                        <div class="result-badge" id="result-type-code"></div>
+                        <h1 id="result-type-name"></h1>
+                        <div class="social-badge" id="result-social-type"></div>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>📝 About You</h3>
+                        <p id="result-description"></p>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>📊 Your Traits</h3>
+                        <div id="traits-chart" class="traits-chart"></div>
+                    </div>
+
+                    <div class="result-cards-row">
+                        <div class="result-card half">
+                            <h3>💪 Strengths</h3>
+                            <ul id="strengths-list" class="tag-list green"></ul>
+                        </div>
+                        <div class="result-card half">
+                            <h3>🎯 Growth Areas</h3>
+                            <ul id="weaknesses-list" class="tag-list orange"></ul>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>💼 Ideal Careers</h3>
+                        <div id="careers-list" class="careers-list"></div>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>🏢 Work Style</h3>
+                        <p id="result-work-style"></p>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>📚 Learning Style</h3>
+                        <p id="result-learning-style"></p>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>🌟 Famous People Like You</h3>
+                        <div id="famous-list" class="famous-list"></div>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>❤️ Compatibility</h3>
+                        <p>You get along best with these types:</p>
+                        <div id="compatibility-list" class="compat-list"></div>
+                    </div>
+
+                    <div class="result-actions">
+                        <button id="retake-btn" class="btn btn-primary btn-lg">
+                            🔄 Take Again
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- History Screen -->
+        <section id="history-screen" class="screen">
+            <div class="container">
+                <div class="history-content">
+                    <h1>📊 Results History</h1>
+                    <div id="history-list" class="history-list"></div>
+                    <button id="back-to-home" class="btn btn-outline btn-lg">
+                        ← Back to Home
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="./js/questions.js"></script>
+    <script src="./js/data.js"></script>
+    <script src="./js/analyzer.js"></script>
+    <script src="./js/storage.js"></script>
+    <script src="./js/quiz.js"></script>
+    <script src="./js/results.js"></script>
+    <script src="./js/app.js"></script>
+</body>
+</html>
